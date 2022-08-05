@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MLM TOKEN Example</title>
+	
+	<script src='https://storage.googleapis.com/dappsdk/dapp-sdk.bundle.js'></script>
+	
+	<!--
+	<script src="https://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+	-->
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous"></script>
+	
+	<script>
+		window.addEventListener('load', async () => {
+			// Modern dapp browsers...
+			if (window.ethereum) {
+				web3 = new Web3(ethereum);
+			}
+			// Legacy dapp browsers...
+			else if (typeof web3 !== 'undefined') {
+				web3 = new Web3(web3.currentProvider);
+			}
+			// Non-dapp browsers...	
+			else {
+				alert("Please install MetaMask chrome extension in your chrome browser to use this site.");
+				console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+			}
+
+			ethereum.autoRefreshOnNetworkChange=false;
+			var network = web3.version.network;
+			console.log('network = ' + network)	; //1: mainnet, 3: ropsten, 4: rinkeby
+			if (network==1)
+				document.getElementById('currNetwork').innerHTML = "MainNet";
+			else if  (network==3)
+				document.getElementById('currNetwork').innerHTML = "Ropsten Test Network";
+			else if (network==4)
+				document.getElementById('currNetwork').innerHTML = "Rinkby Test Network";
+			else
+				document.getElementById('currNetwork').innerHTML = "Private Network";
+			//Trying to get accounts
+			var myAccount=web3.eth.accounts[0];
+			if (myAccount == undefined)
+			{
+				console.log("Account not exists");
+				showHideDiv('Register',true);
+			}
+			else
+			{
+				console.log("Account Exists " + myAccount);
+				showHideDiv('Register',false);
+				startDApp();
+				getAccountInfo(myAccount);
+			}
+
+			/*
+			ethereum.on('chainChanged', chainId => {
+				console.log("chain changed to " + chainId);
+				//alert("Metamask Network changed, Reloading Page.");
+				window.location.reload();
+			});
+			*/
+
+			//ethereum.on('chainChanged', (_chainId) => window.location.reload());
+
+			ethereum.on('accountsChanged', function (accounts) {
+				console.log("account changed to " + accounts);
+				myAccount = accounts[0];
+				getAccountInfo(myAccount);
+				//window.location.reload();
+				//document.location.reload()
+			});
+			// initialize Ethereum App	
+			//startDApp();
+		});
+
+		async function enable()
+		{
+			
+			console.log("enable ethereum");
+			await window.ethereum.enable();
+			myAccount = web3.eth.accounts[0];
+			showHideDiv('Register',false);
+			startDApp();
+			getAccountInfo(myAccount);
+			/*
+			const start = async () => {
+				let result = await window.ethereum.enable();
+			};
+			start()
+				.then(res => {
+				const account = window.web3.eth.defaultAccount;
+				console.log("account addresss = " + account);
+				}).then(res => {
+				startDApp();
+				}).catch(response => {
+				console.log("error = " + response);
+				});
+			*/		
+		}
+
+		function showHideDiv(divId, show) {
+			const div = document.querySelector('#' + divId);
+			if (show) {
+			div.style = 'display: visible';
+			} else {
+			div.style = 'display: none';
+			}
+		  }
+		  
+		  function InitializeDapp() {
+			
+			startDApp();
+			/*
+			const contractAddr = document.getElementById('contractAdd');
+			if (typeof contractAddr == 'undefined' || contractAddr =="")
+				alert('Please enter Contract Address');	
+			else
+				startDApp(contractAddr);
+				*/
+		  }
+
+	  </script>
+
+  </head>
+
+  <body>
+	<h4>Contract Address : <span id='contractAdd'></span></h4>
+	<!--
+	<table>
+		<tr><td>Enter Contract Address : </td>	<td><input id='contractAdd' size="50"></td></tr>
+		<tr><td colspan="2" align="center"><button onclick='InitializeDapp()'>Submit</button></td></tr>	
+	</table>
+	-->
+	<hr/>
+	
+		<h4>
+			Selected Network : <span id='currNetwork'></span> <br>
+			Coin : MLM_TOKEN <br>
+			TotalSupply : <span id='totalTokenSupply'></span> <br>
+		</h4> 	
+
+		<div align="center" id='Register'>
+			<button onclick="enable()">Register/Login</button>
+		</div>
+		
+		<table>
+			<tr><td>Enter Ethereum Address : </td>	<td><input id='ethInfoAdd' size="50"></td></tr>
+			<tr><td colspan="2" align="center"><button onclick='getuserInfo()'>Submit</button></td></tr>	
+		</table>
+
+		<hr/>
+		
+		<div align="center" id='myInfo'>
+			<table border=1>
+				<tr> <td>My Wallet Address</td><td><div id='myAddress'></div></td></tr>
+				<tr> <td>Parent Address</td><td><div id='parentAddress'></div></td></tr>
+				<tr> <td>Eth Balance</td><td><div id='myEthBal'></div></td></tr>
+				<tr> <td>Token Balance</td><td><div id='myTokenBal'></div></td></tr>
+				<tr> <td>Referral Percentage</td><td><div id='myRefPercentage'></div></td></tr>
+				<tr> <td>Direct Referral Count</td><td><div id='mydirectRefCount'></div></td></tr>
+				<tr> <td>InDirect Referral Count</td><td><div id='myIndirectRefCount'></div></td></tr>
+				<tr> <td>Referral Claimed</td><td><div id='myRefClaims'></div></td></tr>
+				<tr> <td>Referral Unclaimed</td><td><div id='myRefUnclaimed'></div></td></tr>
+				<tr> <td>Direct Sales</td><td><div id='myDirectSales'></div></td></tr>
+				<tr> <td>Indirect Sales</td><td><div id='myIndirectSales'></div></td></tr>
+				<tr> <td>Total Sales</td><td><div id='myTotalSales'></div></td></tr>
+			</table>
+		</div>
+
+		<h4>
+			Purchase coin - can be called by anyone with a referral address, 
+			Coins will be generated in 1:100 ratio For Eg: on sending 1 eth, you will get 100 MLM Token
+		</h4>
+		<table>
+			<tr><td>Referral Address : </td><td><input id='referralAdd' size="50"></td></tr>
+			<tr><td>Eth Amount (for eg 0.3) : </td>	<td><input id='ethAmount'></td></tr>
+			<tr><td colspan="2" align="center"><button onclick='purchase()'>Purchase</button></td></tr>	
+		</table>
+
+		<hr/>
+		<p>Transaction generated for Purchase: <h3 id='purchase'></h3></p>
+		<hr/>
+
+		<h4>Claim :-- Claim your ethereum</h4>
+		<table>
+			<tr><td>Eth Amount to claim (for eg 0.3) : </td><td><input id='ethClaimAmount'></td></tr>
+			<tr><td colspan="2" align="center"><button onclick='claim()'>Claim</button></td></tr>	
+		</table>
+
+		<hr/>
+		<p>Transaction generated for Claim: <h3 id='claim'></h3> </p>
+
+		<script type="text/javascript" src='app.js'>
+		</script>
+
+		<script>
+			function getuserInfo()
+			{
+				var usrAddr = document.getElementById('ethInfoAdd').value;
+				console.log("user address = " + usrAddr);
+				getAccountInfo(usrAddr);
+			}
+		</script>
+  </body>
+</html>
