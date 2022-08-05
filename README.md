@@ -4,18 +4,19 @@ A Solidity smart contract that allows any number of users to register through a 
 
 Whenever a Purchase of Token happens, the purchaser gets the desired tokens and the complete Parent heirarchy till Level 10 gets commission as per below defined levels and commission structure.
 
-level	Token Sale Volume	commission %
-1	    0	                50
-2	    1000	            60
-3	    10000	            65
-4	    100000	            70
-5	    200000	            75
-6	    400000	            80
-7	    800000	            85
-8	    1600000	            90
-9	    3200000	            95
-10	    6400000	            100
-
+<table>
+<tr><td>level</td><td>Token Sale Volume</td><td>commission</td></tr>
+<tr><td>1</td><td>0</td><td>50</td></tr>
+<tr><td>2</td><td>1000</td><td>60</td></tr>
+<tr><td>3</td><td>10000</td><td>65</td></tr>
+<tr><td>4</td><td>100000</td><td>70</td></tr>
+<tr><td>5</td><td>200000</td><td>75</td></tr>
+<tr><td>6</td><td>400000</td><td>80</td></tr>
+<tr><td>7</td><td>800000</td><td>85</td></tr>
+<tr><td>8</td><td>1600000</td><td>90</td></tr>
+<tr><td>9</td><td>3200000</td><td>95</td></tr>
+<tr><td>10</td><td>6400000</td><td>100</td></tr>
+</table>
 
 Whwnever the Child Heirarchy of a parent reaches to certain benchmark, then the parent level and commission is increased.
 
