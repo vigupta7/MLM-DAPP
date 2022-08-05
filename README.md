@@ -18,3 +18,5 @@ level	Token Sale Volume	commission %
 
 
 Whwnever the Child Heirarchy of a parent reaches to certain benchmark, then the parent level and commission is increased.
+
+A sample Web page is also created that shows different functions like purchase, withdraw, view profile etc with web3 integration with the DAPP.
