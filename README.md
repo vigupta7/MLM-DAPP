@@ -1,4 +1,4 @@
-# DAPP for Multi Level Marketring with different level and commissoin structure
+# DAPP for Multi Level Marketing with different level and commissoin structure
 
 A Solidity smart contract that allows any number of users to register through a Parent referral Address at Level 1 and subsequently move on to level 10 by adding more and more heirarchy under them driving to token sales.
 
